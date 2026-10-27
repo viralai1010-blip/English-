@@ -35,6 +35,12 @@ jobs:
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > $GITHUB_WORKSPACE/upload-key.jks
 
+      - name: Force minSdkVersion to 24
+        run: |
+          # البحث في جميع ملفات build.gradle وتحديث إصدار الأندرويد الأدنى إلى 24
+          find source -name "build.gradle" -exec sed -i 's/minSdkVersion [0-9]*/minSdkVersion 24/g' {} +
+          find source -name "build.gradle" -exec sed -i 's/minSdk [0-9]*/minSdk 24/g' {} +
+
       - name: Build Unsigned AAB
         run: |
           gradle -p source :app:bundleRelease --no-daemon
